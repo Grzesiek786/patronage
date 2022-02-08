@@ -1,0 +1,81 @@
+<div class="form-container">
+  <mat-grid-list cols="3" rowHeight="70px">
+    <form [formGroup]="form" (submit)="submit()">
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Imię</mat-label>
+          <input matInput type="text" formControlName="name" />
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Nazwisko</mat-label>
+          <input matInput type="text" formControlName="lastName" />
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Enter your email</mat-label>
+          <input matInput formControlName="email" required />
+          <mat-error *ngIf="form.controls.email.touched && form.controls.email.invalid">
+            <span *ngIf="form.controls.email.errors.required">This field is mandatory.</span>
+            <span *ngIf="form.controls.email.errors.pattern">This field is invalid.</span>
+          </mat-error>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Wiek</mat-label>
+          <input matInput maxLength="2" formControlName="age" />
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Płeć</mat-label>
+          <select matNativeControl formControlName="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Telephone</mat-label>
+          <span matPrefix>+1 &nbsp;</span>
+          <input type="tel" matInput placeholder="555-555-1234" formControlName="phone" />
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Adres</mat-label>
+          <input matInput formControlName="address" />
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Data urodzenia</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Favorite Hobbies</mat-label>
+          <mat-select multiple formControlName="hobbies">
+            <mat-option *ngFor="let hobby of hobbies" [value]="hobby.id">
+              {{ hobby.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="3">
+        <button mat-raised-button color="primary" type="submit">Dodaj</button>
+        <button mat-raised-button color="warn" (click)="goBack()">Anuluj</button>
+      </mat-grid-tile>
+    </form>
+  </mat-grid-list>
+</div>

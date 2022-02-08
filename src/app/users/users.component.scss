@@ -1,0 +1,61 @@
+.data-table {
+  width: 90%;
+  margin: 20px auto;
+
+  table {
+    width: 100%;
+  }
+
+  tr.student-detail-row {
+    height: 0;
+  }
+
+  tr.student-element-row:not(.student-expanded-row):hover {
+    background: whitesmoke;
+  }
+
+  tr.student-element-row:not(.student-expanded-row):active {
+    background: #efefef;
+  }
+
+  .student-element-row td {
+    border-bottom-width: 0;
+  }
+
+  .student-element-detail {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .cdk-column-expandedDetail {
+    background-color: #f8f8f8;
+  }
+
+  .expansion-container {
+    padding: 20px;
+  }
+
+  .student-element-diagram {
+    min-width: 80px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
+  }
+
+  .student-element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+  }
+
+  .student-element-description {
+    padding: 16px;
+  }
+
+  .student-element-description-attribution {
+    opacity: 0.5;
+  }
+}
