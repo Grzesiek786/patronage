@@ -127,16 +127,12 @@ export class UsersComponent extends Destroyable implements OnInit {
           return this.compare(a.lastName, b.lastName, isAsc);
         case 'email':
           return this.compare(a.email, b.email, isAsc);
-        // case 'gender':
-        //   return this.compare(a.gender, b.gender, isAsc);
         case 'address':
           return this.compare(a.address, b.address, isAsc);
         case 'age':
           return this.compare(a.age, b.age, isAsc);
         case 'dateOfBirth':
           return this.compare(a.dateOfBirth, b.dateOfBirth, isAsc);
-        // case 'phone':
-          // return this.compare(a.phoneNumber, b.phoneNumber, isAsc);
         default:
           return 0;
       }
