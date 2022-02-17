@@ -1,4 +1,8 @@
-<div class="mat-elevation-z8 data-table container" matSort (matSortChange)="sortData($event)">
+<div
+  class="mat-elevation-z8 data-table container"
+  matSort
+  (matSortChange)="sortData($event)"
+>
   <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
     <!-- Name Column -->
     <ng-container matColumnDef="name">
@@ -8,7 +12,9 @@
 
     <!-- LastName Column -->
     <ng-container matColumnDef="lastName">
-      <th mat-sort-header="lastName" mat-header-cell *matHeaderCellDef>Nazwisko</th>
+      <th mat-sort-header="lastName" mat-header-cell *matHeaderCellDef>
+        Nazwisko
+      </th>
       <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
     </ng-container>
 
@@ -38,7 +44,9 @@
 
     <!-- Date of Birth Column -->
     <ng-container matColumnDef="dateOfBirth">
-      <th mat-sort-header="dateOfBirth" mat-header-cell *matHeaderCellDef>Data urodzenia</th>
+      <th mat-sort-header="dateOfBirth" mat-header-cell *matHeaderCellDef>
+        Data urodzenia
+      </th>
       <td mat-cell *matCellDef="let element">{{ element.dateOfBirth }}</td>
     </ng-container>
 
@@ -53,17 +61,33 @@
       <th mat-header-cell *matHeaderCellDef>Akcja</th>
       <td mat-cell *matCellDef="let element">
         <div class="button">
-          <button mat-raised-button color="primary" (click)="element.isExpanded = !element.isExpanded">Szczegóły</button>
-          <button mat-raised-button color="warn" (click)="deleteUser(element)">Usuń</button>
-          <button mat-raised-button color="success" (click)="editUser(element)">Edytuj</button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="element.isExpanded = !element.isExpanded"
+          >
+            Szczegóły
+          </button>
+          <button mat-raised-button color="warn" (click)="deleteUser(element)">
+            Usuń
+          </button>
+          <button mat-raised-button color="success" (click)="editUser(element)">
+            Edytuj
+          </button>
         </div>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-
-        <div class="row student-element-detail" [@detailExpand]="element.isExpanded ? 'expanded' : 'collapsed'">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          class="row student-element-detail"
+          [@detailExpand]="element.isExpanded ? 'expanded' : 'collapsed'"
+        >
           <div class="expansion-container">
             <h3>Hobbies</h3>
             <mat-list>
@@ -73,17 +97,21 @@
             </mat-list>
           </div>
         </div>
-
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
-        class="student-element-row"
-        [class.example-expanded-row]="element.isExpanded"
-        >
-    </tr>
-    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="student-detail-row"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: displayedColumns"
+      class="student-element-row"
+      [class.example-expanded-row]="element.isExpanded"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="student-detail-row"
+    ></tr>
   </table>
   <mat-paginator
     showFirstLastButtons
@@ -92,3 +120,5 @@
   >
   </mat-paginator>
 </div>
+
+<app-error *ngIf="messageError" [messageError]="messageError"></app-error>

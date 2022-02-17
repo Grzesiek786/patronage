@@ -21,9 +21,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { AddUserComponent } from './add-user/add-user.component';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
-  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent],
+  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

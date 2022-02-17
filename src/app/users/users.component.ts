@@ -5,8 +5,8 @@ import { User } from 'src/shared/user.interface';
 import { HobbiesService } from '../services/hobbies.service';
 import { UsersService } from '../services/users.service';
 import { Destroyable } from '../shared/destroyable';
-import { takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
+import { combineLatest, Observable, throwError } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import {
   animate,
@@ -16,6 +16,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { MatSort, Sort } from '@angular/material/sort';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-users',
@@ -38,6 +39,7 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public hobbies: Hobby[] = [];
   sortedData: Hobby[] = [];
+  public messageError: string = 'Ups coś poszło nie tak, proszę spróbować ponownie 💥💥💥';
 
   public displayedColumns: string[] = [
     'name',
@@ -64,7 +66,9 @@ export class UsersComponent extends Destroyable implements OnInit {
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
     combineLatest([users$, hobbies$])
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        takeUntil(this.destroyed$),
+        catchError(this.handleError))
       .subscribe(([users, hobbies]) => {
         this.handleUserWithHobbiesSubscription(users, hobbies);
       });
@@ -141,5 +145,15 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   private compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if(error.status === 0) {
+      console.error('Wydarzył się błąd', error.error);
+    } else {
+      console.error(`Status błędu ${error.status}, `, error.error);
+    }
+
+    return throwError(() => new Error('Ups coś się stało, proszę spróbować ponownie później.'));
   }
 }
