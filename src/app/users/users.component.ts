@@ -68,7 +68,8 @@ export class UsersComponent extends Destroyable implements OnInit {
     combineLatest([users$, hobbies$])
       .pipe(
         takeUntil(this.destroyed$),
-        catchError(this.handleError))
+        catchError(this.handleError)
+        )
       .subscribe(([users, hobbies]) => {
         this.handleUserWithHobbiesSubscription(users, hobbies);
       });
@@ -149,9 +150,9 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   private handleError(error: HttpErrorResponse) {
     if(error.status === 0) {
-      console.error('Wydarzył się błąd', error.error);
+      console.error('Wydarzył się błąd', error.message);
     } else {
-      console.error(`Status błędu ${error.status}, `, error.error);
+      console.error(`Status błędu ${error.status}, `, error.message);
     }
 
     return throwError(() => new Error('Ups coś się stało, proszę spróbować ponownie później.'));

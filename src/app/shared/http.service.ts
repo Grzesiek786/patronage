@@ -1,6 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 const httpOptions = {
@@ -19,7 +20,8 @@ export class HttpService {
 
   public get<T>(url: string): Observable<T> {
     const fullUrl: string = this.prepareFullUrl(url);
-    return this.httpClient.get<T>(fullUrl);
+    return this.httpClient.get<T>(fullUrl)
+    .pipe(catchError(this.handleError));
   }
 
   private prepareFullUrl(url: string): string {
@@ -38,5 +40,15 @@ export class HttpService {
   public put<T>(t: T, url: string, id: string): Observable<T> {
     const putUrl: string = `${this.prepareFullUrl(url)}/${id}`;
     return this.httpClient.put<T>(putUrl, t, httpOptions);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if(error.status === 0) {
+      console.error('Wydarzył się błąd', error.error);
+    } else {
+      console.error(`Status błędu ${error.status}, `, error.error);
+    }
+
+    return throwError(() => new Error('Ups coś się stało, proszę spróbować ponownie później.'));
   }
 }
