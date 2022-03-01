@@ -39,7 +39,9 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public hobbies: Hobby[] = [];
   sortedData: Hobby[] = [];
-  public messageError: string = 'Ups coś poszło nie tak, proszę spróbować ponownie 💥💥💥';
+  public messageError: string =
+    'Ups coś poszło nie tak, proszę spróbować ponownie 💥💥💥';
+  public isError: boolean = false;
 
   public displayedColumns: string[] = [
     'name',
@@ -66,13 +68,21 @@ export class UsersComponent extends Destroyable implements OnInit {
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
     combineLatest([users$, hobbies$])
-      .pipe(
-        takeUntil(this.destroyed$),
-        catchError(this.handleError)
-        )
-      .subscribe(([users, hobbies]) => {
-        this.handleUserWithHobbiesSubscription(users, hobbies);
-      });
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        ([users, hobbies]) => {
+          this.handleUserWithHobbiesSubscription(users, hobbies);
+        },
+        (error) => {
+          if (error.status === 0) {
+            this.isError = true;
+            this.messageError;
+            // console.error('Wydarzył się błąd', this.messageError);
+          } else {
+            console.error(`Status błędu ${error.error}, `, error.message);
+          }
+        }
+      );
   }
 
   private handleUserWithHobbiesSubscription(
@@ -146,15 +156,5 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   private compare(a: number | string, b: number | string, isAsc: boolean) {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    if(error.status === 0) {
-      console.error('Wydarzył się błąd', error.message);
-    } else {
-      console.error(`Status błędu ${error.status}, `, error.message);
-    }
-
-    return throwError(() => new Error('Ups coś się stało, proszę spróbować ponownie później.'));
   }
 }
