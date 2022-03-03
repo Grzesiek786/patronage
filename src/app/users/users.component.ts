@@ -74,13 +74,8 @@ export class UsersComponent extends Destroyable implements OnInit {
           this.handleUserWithHobbiesSubscription(users, hobbies);
         },
         (error) => {
-          if (error.status === 0) {
-            this.isError = true;
-            this.messageError;
-            // console.error('Wydarzył się błąd', this.messageError);
-          } else {
-            console.error(`Status błędu ${error.error}, `, error.message);
-          }
+          this.isError = !this.isError;
+          this.messageError;
         }
       );
   }
