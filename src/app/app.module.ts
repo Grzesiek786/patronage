@@ -22,9 +22,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ErrorComponent } from './error/error.component';
+import { FilterComponent } from './filter/filter.component';
 
 @NgModule({
-  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent],
+  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent, FilterComponent ],
   imports: [
     BrowserModule,
     AppRoutingModule,

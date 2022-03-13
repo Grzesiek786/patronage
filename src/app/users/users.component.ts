@@ -5,8 +5,8 @@ import { User } from 'src/shared/user.interface';
 import { HobbiesService } from '../services/hobbies.service';
 import { UsersService } from '../services/users.service';
 import { Destroyable } from '../shared/destroyable';
-import { catchError, takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable, throwError } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import {
   animate,
@@ -16,7 +16,6 @@ import {
   trigger,
 } from '@angular/animations';
 import { MatSort, Sort } from '@angular/material/sort';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-users',
@@ -68,7 +67,8 @@ export class UsersComponent extends Destroyable implements OnInit {
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
     combineLatest([users$, hobbies$])
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(
+        takeUntil(this.destroyed$))
       .subscribe(
         ([users, hobbies]) => {
           this.handleUserWithHobbiesSubscription(users, hobbies);
