@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-filter',
@@ -11,6 +12,8 @@ export class FilterComponent implements OnInit {
   public form: FormGroup;
   @Output()
   public groupFilters: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  public nameValue: EventEmitter<string> = new EventEmitter<string>();
   public searchText: string = '';
 
   constructor(private fb: FormBuilder) {}
@@ -35,6 +38,10 @@ export class FilterComponent implements OnInit {
       filters[key] === '' ? delete filters[key] : key
     );
     this.groupFilters.emit(filters);
+  }
+
+  public applyFilter(event: Event) {
+    this.nameValue.emit((event.target as HTMLInputElement).value);
   }
 
   public clear(): void {

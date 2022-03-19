@@ -1,4 +1,13 @@
-<app-filter></app-filter>
+<app-filter (applyFilter)="applyFilter($event)"></app-filter>
+<mat-form-field appearance="standard">
+  <mat-label>Filter</mat-label>
+  <input
+    matInput
+    (keyup)="applyFilter($event)"
+    placeholder="Search columns"
+    #input
+  />
+</mat-form-field>
 <div
   class="mat-elevation-z8 data-table container"
   matSort
