@@ -23,9 +23,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ErrorComponent } from './error/error.component';
 import { FilterComponent } from './filter/filter.component';
+import { FilterPipe } from './shared/filter.pipe';
 
 @NgModule({
-  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent, FilterComponent ],
+  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent, FilterComponent, FilterPipe ],
   imports: [
     BrowserModule,
     AppRoutingModule,

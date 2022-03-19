@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Hobby } from 'src/shared/hobby.interface';
 import { User } from 'src/shared/user.interface';
@@ -16,6 +23,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { MatSort, Sort } from '@angular/material/sort';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-users',
@@ -35,12 +43,18 @@ import { MatSort, Sort } from '@angular/material/sort';
 export class UsersComponent extends Destroyable implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @Input()
+  public groupFilters: Object;
+  @Input()
+  public searchByKeyword: string;
 
   public hobbies: Hobby[] = [];
   sortedData: Hobby[] = [];
   public messageError: string =
     'Ups coś poszło nie tak, proszę spróbować ponownie 💥💥💥';
   public isError: boolean = false;
+  public users: any[] = [];
+  public filteredUsers: any[] = [];
 
   public displayedColumns: string[] = [
     'name',
@@ -67,8 +81,7 @@ export class UsersComponent extends Destroyable implements OnInit {
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
     combineLatest([users$, hobbies$])
-      .pipe(
-        takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe(
         ([users, hobbies]) => {
           this.handleUserWithHobbiesSubscription(users, hobbies);

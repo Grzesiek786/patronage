@@ -1,35 +1,61 @@
-<p>filter works!</p>
-<input #Name type="text" placeholder="Imię" (input)="searchName(Name.value)" />
-<input
-  #LastName
-  type="text"
-  placeholder="Nazwisko"
-  (input)="searchLastName(LastName.value)"
-/>
-<input
-  #Email
-  type="text"
-  placeholder="Email"
-  (input)="searchEmail(Email.value)"
-/>
-<input #Age type="number" placeholder="Wiek" (input)="searchAge(Age.value)" />
-<input
-  #Adres
-  type="text"
-  placeholder="Adres"
-  (input)="searchAdres(Adres.value)"
-/>
-<input
-  #DatOfBirth
-  type="text"
-  placeholder="Data urodzenia"
-  (input)="searchDateOfBirth(DatOfBirth.value)"
-/>
-<input
-  #Hobbies
-  type="text"
-  placeholder="Zainteresowania"
-  (input)="searchName(Hobbies.value)"
-/>
-
-<button>Wyczyść filtry</button>
+<form novalidate [formGroup]="form">
+  <h3>Group Filter</h3>
+  <div class="row">
+    <div class="col-md-2">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="firstName"
+        placeholder="First Name"
+      />
+    </div>
+    <div class="col-md-2">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="lastName"
+        placeholder="Last Name"
+      />
+    </div>
+    <div class="col-md-2">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="email"
+        placeholder="Email"
+      />
+    </div>
+    <div class="col-md-2">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="address"
+        placeholder="Address"
+      />
+    </div>
+    <div class="col-md-2">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="dateOfBirth"
+        placeholder="Date of Birth"
+      />
+    </div>
+    <div class="col-md-2">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="hobbies"
+        placeholder="Hobbies"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-center mt-3">
+      <button class="btn btn-primary me-5" (click)="search(form.value)">
+        Search
+      </button>
+      <button class="btn btn-danger" (click)="clear()">Clear</button>
+    </div>
+  </div>
+</form>

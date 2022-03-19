@@ -7,6 +7,7 @@ import { HttpService } from '../shared/http.service';
   providedIn: 'root',
 })
 export class UsersService {
+
   constructor(private httpService: HttpService) {}
 
   public fetchUsers(): Observable<User[]> {
