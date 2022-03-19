@@ -23,7 +23,6 @@ import {
   trigger,
 } from '@angular/animations';
 import { MatSort, Sort } from '@angular/material/sort';
-import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-users',
@@ -45,8 +44,6 @@ export class UsersComponent extends Destroyable implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @Input()
   public groupFilters: Object;
-  @Input()
-  public searchByKeyword: string;
 
   public hobbies: Hobby[] = [];
   sortedData: Hobby[] = [];
