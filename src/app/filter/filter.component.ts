@@ -10,9 +10,9 @@ import { filter } from 'rxjs/operators';
 })
 export class FilterComponent implements OnInit {
   public form: FormGroup;
-  @Output()
-  public groupFilters: EventEmitter<any> = new EventEmitter<any>();
-  @Output()
+	@Output() 
+  groupFilters: EventEmitter<any> = new EventEmitter<any>();
+  @Output() 
   public nameValue: EventEmitter<string> = new EventEmitter<string>();
   public searchText: string = '';
 
@@ -37,6 +37,7 @@ export class FilterComponent implements OnInit {
     Object.keys(filters).forEach((key) =>
       filters[key] === '' ? delete filters[key] : key
     );
+    console.debug("search called, emiting event");
     this.groupFilters.emit(filters);
   }
 

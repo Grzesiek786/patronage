@@ -42,7 +42,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 export class UsersComponent extends Destroyable implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @Input()
+	@Input()
   public groupFilters: Object;
 
   public hobbies: Hobby[] = [];
@@ -164,6 +164,7 @@ export class UsersComponent extends Destroyable implements OnInit {
   }
 
   public applyFilter(event: Event) {
+    console.debug("applyFilter called");
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
