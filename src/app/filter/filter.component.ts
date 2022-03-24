@@ -10,9 +10,9 @@ import { filter } from 'rxjs/operators';
 })
 export class FilterComponent implements OnInit {
   public form: FormGroup;
-	@Output() 
-  groupFilters: EventEmitter<any> = new EventEmitter<any>();
-  @Output() 
+  @Output()
+  public groupFilters: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
   public nameValue: EventEmitter<string> = new EventEmitter<string>();
   public searchText: string = '';
 
