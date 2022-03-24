@@ -37,7 +37,6 @@ export class FilterComponent implements OnInit {
     Object.keys(filters).forEach((key) =>
       filters[key] === '' ? delete filters[key] : key
     );
-    console.debug("search called, emiting event");
     this.groupFilters.emit(filters);
   }
 

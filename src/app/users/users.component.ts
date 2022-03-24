@@ -74,6 +74,10 @@ export class UsersComponent extends Destroyable implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(filters: any = null){
     const users$: Observable<User[]> = this.usersService.fetchUsers();
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
@@ -81,7 +85,8 @@ export class UsersComponent extends Destroyable implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(
         ([users, hobbies]) => {
-          this.handleUserWithHobbiesSubscription(users, hobbies);
+          var filteredUsers = (filters == null) ? users : users.filter(filters);
+          this.handleUserWithHobbiesSubscription(filteredUsers, hobbies);
         },
         (error) => {
           this.isError = !this.isError;
@@ -163,8 +168,27 @@ export class UsersComponent extends Destroyable implements OnInit {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
+  public filterUsers(filters: any){
+    console.log("filtering users");
+
+    this.filteredUsers = this.users; 
+    const keys = Object.keys(filters);
+    const filterUser = user => {
+      let result = keys.map(key => {
+        if (user[key]) {
+          return String(user[key]).toLowerCase().startsWith(String(filters[key]).toLowerCase())
+        } else {
+          return false;
+        }
+      });
+      result = result.filter(it => it !== undefined);
+      return result.reduce((acc, cur: any) => { return acc & cur }, 1)
+    }
+    this.filteredUsers = this.users.filter(filterUser);
+    this.loadData(filterUser);
+  }
+
   public applyFilter(event: Event) {
-    console.debug("applyFilter called");
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
