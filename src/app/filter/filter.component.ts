@@ -12,9 +12,6 @@ export class FilterComponent implements OnInit {
   public form: FormGroup;
   @Output()
   public groupFilters: EventEmitter<any> = new EventEmitter<any>();
-  @Output()
-  public nameValue: EventEmitter<string> = new EventEmitter<string>();
-  public searchText: string = '';
 
   constructor(private fb: FormBuilder) {}
 
@@ -24,7 +21,7 @@ export class FilterComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.fb.group({
-      firstName: new FormControl(''),
+      names: new FormControl(''),
       lastName: new FormControl(''),
       email: new FormControl(''),
       address: new FormControl(''),
@@ -34,17 +31,17 @@ export class FilterComponent implements OnInit {
   }
 
   public search(filters: any): void {
-    Object.keys(filters).forEach((key) =>
-      filters[key] === '' ? delete filters[key] : key
-    );
-    this.groupFilters.emit(filters);
-  }
+    Object.keys(filters).forEach((key) => {
+      console.log(filters[key]);
+      console.log('key ', key);
+      filters[key] === '' ? delete filters[key] : key;
+    });
 
-  public applyFilter(event: Event) {
-    this.nameValue.emit((event.target as HTMLInputElement).value);
+    this.groupFilters.emit(filters);
   }
 
   public clear(): void {
     this.form.reset();
+    this.buildForm();
   }
 }
