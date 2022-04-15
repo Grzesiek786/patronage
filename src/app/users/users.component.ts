@@ -1,28 +1,16 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { Hobby } from 'src/shared/hobby.interface';
-import { User } from 'src/shared/user.interface';
-import { HobbiesService } from '../services/hobbies.service';
-import { UsersService } from '../services/users.service';
-import { Destroyable } from '../shared/destroyable';
-import { map, takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import { MatSort, Sort } from '@angular/material/sort';
+import {Component, Input, OnInit, ViewChild,} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {Hobby} from 'src/shared/hobby.interface';
+import {User} from 'src/shared/user.interface';
+import {HobbiesService} from '../services/hobbies.service';
+import {UsersService} from '../services/users.service';
+import {Destroyable} from '../shared/destroyable';
+import {catchError, takeUntil} from 'rxjs/operators';
+import {combineLatest, EMPTY, Observable} from 'rxjs';
+import {MatPaginator} from '@angular/material/paginator';
+import {animate, state, style, transition, trigger,} from '@angular/animations';
+import {MatSort, Sort} from '@angular/material/sort';
+import {SearchedUser} from '../../shared/searched-user.interface';
 
 @Component({
   selector: 'app-users',
@@ -30,8 +18,8 @@ import { MatSort, Sort } from '@angular/material/sort';
   styleUrls: ['./users.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
       transition(
         'expanded <=> collapsed',
         animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
@@ -65,6 +53,7 @@ export class UsersComponent extends Destroyable implements OnInit {
     'action',
   ];
   public dataSource: MatTableDataSource<User>;
+  public dataSourceWithAllData: MatTableDataSource<User>;
 
   constructor(
     private usersService: UsersService,
@@ -73,20 +62,21 @@ export class UsersComponent extends Destroyable implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const users$: Observable<User[]> = this.usersService.fetchUsers();
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
     combineLatest([users$, hobbies$])
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        ([users, hobbies]) => {
-          this.handleUserWithHobbiesSubscription(users, hobbies);
-        },
-        (error) => {
+      .pipe(
+        takeUntil(this.destroyed$),
+        catchError(() => {
           this.isError = !this.isError;
-          this.messageError;
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(
+        ([users, hobbies]) =>
+          this.handleUserWithHobbiesSubscription(users, hobbies)
       );
   }
 
@@ -107,6 +97,7 @@ export class UsersComponent extends Destroyable implements OnInit {
       });
     });
     this.dataSource = new MatTableDataSource<User>(users);
+    this.dataSourceWithAllData = new MatTableDataSource<User>(users);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -131,7 +122,7 @@ export class UsersComponent extends Destroyable implements OnInit {
     console.log(user);
   }
 
-  public sortData(sort: Sort) {
+  public sortData(sort: Sort): void {
     const data = this.dataSource.filteredData.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedData = data;
@@ -159,12 +150,57 @@ export class UsersComponent extends Destroyable implements OnInit {
     });
   }
 
-  private compare(a: number | string, b: number | string, isAsc: boolean) {
+  private compare(a: number | string, b: number | string, isAsc: boolean): number {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
-  public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  public filtersApplied(searchedUser: SearchedUser): void {
+    const filteredUsers: User[] = [];
+    this.dataSourceWithAllData.data.forEach((singleUser: User) => {
+
+      if (searchedUser.firstName && singleUser.name.includes(searchedUser.firstName)) {
+        console.log('dodaje bo name', singleUser.name, searchedUser.firstName);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.lastName && singleUser.lastName.includes(searchedUser.lastName)) {
+        console.log('dodaje bo nazwisko', singleUser.lastName, searchedUser.lastName);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.dateOfBirth && singleUser.dateOfBirth.includes(searchedUser.dateOfBirth)) {
+        console.log('dodaje bo data', singleUser.dateOfBirth, searchedUser.dateOfBirth);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.hobbies && singleUser.hobbies.includes(searchedUser.hobbies)) {
+        console.log('dodaje bo hobbies', singleUser.hobbies, searchedUser.hobbies);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.email && singleUser.email.includes(searchedUser.email)) {
+        console.log('dodaje bo email', singleUser.email, searchedUser.email);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.address && singleUser.address.includes(searchedUser.address)) {
+        console.log('dodaje bo address', singleUser.address, searchedUser.address);
+        filteredUsers.push(singleUser);
+        return;
+      }
+    });
+
+    console.log(filteredUsers);
+
+    this.dataSource = new MatTableDataSource<User>(filteredUsers);
+  }
+
+  public filterReset(): void {
+    this.dataSource = this.dataSourceWithAllData;
   }
 }

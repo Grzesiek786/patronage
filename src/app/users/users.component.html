@@ -1,9 +1,8 @@
-<app-filter (applyFilter)="applyFilter($event)"></app-filter>
+<app-filter (filtersApplied)="filtersApplied($event)" (filterReset)="filterReset()"></app-filter>
 <mat-form-field appearance="standard">
   <mat-label>Filter</mat-label>
   <input
     matInput
-    (keyup)="applyFilter($event)"
     placeholder="Search columns"
     #input
   />
