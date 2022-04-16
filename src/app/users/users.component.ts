@@ -165,30 +165,6 @@ export class UsersComponent extends Destroyable implements OnInit {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
-  // public filterUsers(filters: any) {
-  //   console.log('filtering users');
-
-  //   this.filteredUsers = this.users;
-  //   const keys = Object.keys(filters);
-  //   const filterUser = (user) => {
-  //     let result = keys.map((key) => {
-  //       if (user[key]) {
-  //         return String(user[key])
-  //           .toLowerCase()
-  //           .startsWith(String(filters[key]).toLowerCase());
-  //       } else {
-  //         return false;
-  //       }
-  //     });
-  //     result = result.filter((it) => it !== undefined);
-  //     return result.reduce((acc, cur: any) => {
-  //       return acc & cur;
-  //     }, 1);
-  //   };
-  //   this.filteredUsers = this.users.filter(filterUser);
-  //   this.loadData(filterUser);
-  // }
-
   public filtersApplied(searchedUser: SearchedUser): void {
     const filteredUsers: User[] = [];
     this.dataSourceWithAllData.data.forEach((singleUser: User) => {

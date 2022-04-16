@@ -24,7 +24,7 @@ export class FilterComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.fb.group({
-      names: new FormControl(''),
+      firstName: new FormControl(''),
       lastName: new FormControl(''),
       email: new FormControl(''),
       address: new FormControl(''),
