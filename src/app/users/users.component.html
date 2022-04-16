@@ -1,4 +1,4 @@
-<app-filter (groupFilters)="filterUsers($event)"></app-filter>
+<app-filter (filtersApplied)="filtersApplied($event)" (filterReset)="filterReset()"></app-filter>
 <div
   class="mat-elevation-z8 data-table container"
   matSort

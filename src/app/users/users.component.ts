@@ -1,8 +1,6 @@
 import {
-  ChangeDetectorRef,
   Component,
   Input,
-  OnChanges,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -12,8 +10,8 @@ import { User } from 'src/shared/user.interface';
 import { HobbiesService } from '../services/hobbies.service';
 import { UsersService } from '../services/users.service';
 import { Destroyable } from '../shared/destroyable';
-import { map, takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import {
   animate,
@@ -23,6 +21,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { MatSort, Sort } from '@angular/material/sort';
+import { SearchedUser } from 'src/shared/searched-user.interface';
 
 @Component({
   selector: 'app-users',
@@ -65,6 +64,7 @@ export class UsersComponent extends Destroyable implements OnInit {
     'action',
   ];
   public dataSource: MatTableDataSource<User>;
+  public dataSourceWithAllData: MatTableDataSource<User>;
 
   constructor(
     private usersService: UsersService,
@@ -73,25 +73,21 @@ export class UsersComponent extends Destroyable implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
-    this.loadData();
-  }
-
-  loadData(filters: any = null) {
+  public ngOnInit(): void {
     const users$: Observable<User[]> = this.usersService.fetchUsers();
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
     combineLatest([users$, hobbies$])
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        ([users, hobbies]) => {
-          const filteredUsers = filters == null ? users : users.filter(filters);
-          this.handleUserWithHobbiesSubscription(filteredUsers, hobbies);
-        },
-        (error) => {
+      .pipe(
+        takeUntil(this.destroyed$),
+        catchError(() => {
           this.isError = !this.isError;
-          this.messageError;
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(
+        ([users, hobbies]) =>
+          this.handleUserWithHobbiesSubscription(users, hobbies)
       );
   }
 
@@ -112,6 +108,7 @@ export class UsersComponent extends Destroyable implements OnInit {
       });
     });
     this.dataSource = new MatTableDataSource<User>(users);
+    this.dataSourceWithAllData = new MatTableDataSource<User>(users);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -168,27 +165,77 @@ export class UsersComponent extends Destroyable implements OnInit {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
-  public filterUsers(filters: any) {
-    console.log('filtering users');
+  // public filterUsers(filters: any) {
+  //   console.log('filtering users');
 
-    this.filteredUsers = this.users;
-    const keys = Object.keys(filters);
-    const filterUser = (user) => {
-      let result = keys.map((key) => {
-        if (user[key]) {
-          return String(user[key])
-            .toLowerCase()
-            .startsWith(String(filters[key]).toLowerCase());
-        } else {
-          return false;
-        }
-      });
-      result = result.filter((it) => it !== undefined);
-      return result.reduce((acc, cur: any) => {
-        return acc & cur;
-      }, 1);
-    };
-    this.filteredUsers = this.users.filter(filterUser);
-    this.loadData(filterUser);
+  //   this.filteredUsers = this.users;
+  //   const keys = Object.keys(filters);
+  //   const filterUser = (user) => {
+  //     let result = keys.map((key) => {
+  //       if (user[key]) {
+  //         return String(user[key])
+  //           .toLowerCase()
+  //           .startsWith(String(filters[key]).toLowerCase());
+  //       } else {
+  //         return false;
+  //       }
+  //     });
+  //     result = result.filter((it) => it !== undefined);
+  //     return result.reduce((acc, cur: any) => {
+  //       return acc & cur;
+  //     }, 1);
+  //   };
+  //   this.filteredUsers = this.users.filter(filterUser);
+  //   this.loadData(filterUser);
+  // }
+
+  public filtersApplied(searchedUser: SearchedUser): void {
+    const filteredUsers: User[] = [];
+    this.dataSourceWithAllData.data.forEach((singleUser: User) => {
+
+      if (searchedUser.firstName && singleUser.name.includes(searchedUser.firstName)) {
+        console.log('dodaje bo name', singleUser.name, searchedUser.firstName);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.lastName && singleUser.lastName.includes(searchedUser.lastName)) {
+        console.log('dodaje bo nazwisko', singleUser.lastName, searchedUser.lastName);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.dateOfBirth && singleUser.dateOfBirth.includes(searchedUser.dateOfBirth)) {
+        console.log('dodaje bo data', singleUser.dateOfBirth, searchedUser.dateOfBirth);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.hobbies && singleUser.hobbyNames.includes(searchedUser.hobbies)) {
+        console.log('dodaje bo hobbies', singleUser.hobbyNames, searchedUser.hobbies);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.email && singleUser.email.includes(searchedUser.email)) {
+        console.log('dodaje bo email', singleUser.email, searchedUser.email);
+        filteredUsers.push(singleUser);
+        return;
+      }
+
+      if (searchedUser.address && singleUser.address.includes(searchedUser.address)) {
+        console.log('dodaje bo address', singleUser.address, searchedUser.address);
+        filteredUsers.push(singleUser);
+        return;
+      }
+    });
+
+    console.log(filteredUsers);
+
+    this.dataSource = new MatTableDataSource<User>(filteredUsers);
+  }
+
+  public filterReset(): void {
+    this.dataSource = this.dataSourceWithAllData;
   }
 }
