@@ -10,8 +10,6 @@ import { SearchedUser } from 'src/shared/searched-user.interface';
 export class FilterComponent implements OnInit {
   public form: FormGroup;
   @Output()
-  public groupFilters: EventEmitter<any> = new EventEmitter<any>();
-  @Output()
   public filtersApplied: EventEmitter<SearchedUser> = new EventEmitter<SearchedUser>();
   @Output()
   public filterReset: EventEmitter<SearchedUser> = new EventEmitter<SearchedUser>();
@@ -32,16 +30,6 @@ export class FilterComponent implements OnInit {
       hobbies: new FormControl(''),
     });
   }
-
-  // public search(filters: any): void {
-  //   Object.keys(filters).forEach((key) => {
-  //     console.log(filters[key]);
-  //     console.log('key ', key);
-  //     filters[key] === '' ? delete filters[key] : key;
-  //   });
-
-  //   this.groupFilters.emit(filters);
-  // }
 
   public applyFilter(): void {
     const searchedUser: SearchedUser = this.prepareSearchedUser();

@@ -167,6 +167,7 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public filtersApplied(searchedUser: SearchedUser): void {
     const filteredUsers: User[] = [];
+
     this.dataSourceWithAllData.data.forEach((singleUser: User) => {
 
       if (searchedUser.firstName && singleUser.name.includes(searchedUser.firstName)) {
