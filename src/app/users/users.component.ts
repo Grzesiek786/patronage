@@ -214,5 +214,7 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public filterReset(): void {
     this.dataSource = this.dataSourceWithAllData;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 }
