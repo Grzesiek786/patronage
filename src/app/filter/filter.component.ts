@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SearchedUser } from 'src/shared/searched-user.interface';
 
@@ -18,6 +18,7 @@ export class FilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    console.log(this.form);
   }
 
   private buildForm(): void {

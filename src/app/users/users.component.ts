@@ -208,7 +208,6 @@ export class UsersComponent extends Destroyable implements OnInit {
     });
 
     console.log(filteredUsers);
-
     this.dataSource = new MatTableDataSource<User>(filteredUsers);
   }
 
