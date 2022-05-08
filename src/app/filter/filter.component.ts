@@ -18,7 +18,6 @@ export class FilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    console.log(this.form);
   }
 
   private buildForm(): void {

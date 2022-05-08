@@ -170,45 +170,60 @@ export class UsersComponent extends Destroyable implements OnInit {
 
     this.dataSourceWithAllData.data.forEach((singleUser: User) => {
 
-      if (searchedUser.firstName && singleUser.name.includes(searchedUser.firstName)) {
-        console.log('dodaje bo name', singleUser.name, searchedUser.firstName);
+      if ((searchedUser.firstName && singleUser.name.includes(searchedUser.firstName) || searchedUser.firstName === '')
+        &&
+        (searchedUser.lastName && singleUser.lastName.includes(searchedUser.lastName) || searchedUser.lastName === '')
+        &&
+        (searchedUser.dateOfBirth && singleUser.dateOfBirth.includes(searchedUser.dateOfBirth) || searchedUser.dateOfBirth === '')
+        &&
+        (searchedUser.email && singleUser.email.includes(searchedUser.email) || searchedUser.email === '')
+        &&
+        (searchedUser.address && singleUser.address.includes(searchedUser.address) || searchedUser.address === '')
+        &&
+        (searchedUser.hobbies && singleUser.hobbyNames.includes(searchedUser.hobbies) || searchedUser.hobbies === '')
+        ){
+        console.log('Wyszukanie co jest prawda', searchedUser, singleUser);
+        console.log('dodaje bo name', singleUser);
+        console.log('dodaje do searchUser', searchedUser);
+        console.log('Prawda', (singleUser.address.includes(searchedUser.address)));
         filteredUsers.push(singleUser);
         return;
       }
 
-      if (searchedUser.lastName && singleUser.lastName.includes(searchedUser.lastName)) {
-        console.log('dodaje bo nazwisko', singleUser.lastName, searchedUser.lastName);
-        filteredUsers.push(singleUser);
-        return;
-      }
+      // if (searchedUser.lastName && singleUser.lastName.includes(searchedUser.lastName)) {
+      //   console.log('dodaje bo nazwisko', singleUser.lastName, searchedUser.lastName);
+      //   filteredUsers.push(singleUser);
+      //   return;
+      // }
 
-      if (searchedUser.dateOfBirth && singleUser.dateOfBirth.includes(searchedUser.dateOfBirth)) {
-        console.log('dodaje bo data', singleUser.dateOfBirth, searchedUser.dateOfBirth);
-        filteredUsers.push(singleUser);
-        return;
-      }
+      // if (searchedUser.dateOfBirth && singleUser.dateOfBirth.includes(searchedUser.dateOfBirth)) {
+      //   console.log('dodaje bo data', singleUser.dateOfBirth, searchedUser.dateOfBirth);
+      //   filteredUsers.push(singleUser);
+      //   return;
+      // }
 
-      if (searchedUser.hobbies && singleUser.hobbyNames.includes(searchedUser.hobbies)) {
-        console.log('dodaje bo hobbies', singleUser.hobbyNames, searchedUser.hobbies);
-        filteredUsers.push(singleUser);
-        return;
-      }
+      // if (searchedUser.hobbies && singleUser.hobbyNames.includes(searchedUser.hobbies)) {
+      //   console.log('dodaje bo hobbies', singleUser.hobbyNames, searchedUser.hobbies);
+      //   filteredUsers.push(singleUser);
+      //   return;
+      // }
 
-      if (searchedUser.email && singleUser.email.includes(searchedUser.email)) {
-        console.log('dodaje bo email', singleUser.email, searchedUser.email);
-        filteredUsers.push(singleUser);
-        return;
-      }
+      // if (searchedUser.email && singleUser.email.includes(searchedUser.email)) {
+      //   console.log('dodaje bo email', singleUser.email, searchedUser.email);
+      //   filteredUsers.push(singleUser);
+      //   return;
+      // }
 
-      if (searchedUser.address && singleUser.address.includes(searchedUser.address)) {
-        console.log('dodaje bo address', singleUser.address, searchedUser.address);
-        filteredUsers.push(singleUser);
-        return;
-      }
+      // if (searchedUser.address && singleUser.address.includes(searchedUser.address)) {
+      //   console.log('dodaje bo address', singleUser.address, searchedUser.address);
+      //   filteredUsers.push(singleUser);
+      //   return;
+      // }
     });
-
-    console.log(filteredUsers);
+    console.log('Filtrowany', filteredUsers);
     this.dataSource = new MatTableDataSource<User>(filteredUsers);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   public filterReset(): void {
