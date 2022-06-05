@@ -1,9 +1,4 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Hobby } from 'src/shared/hobby.interface';
 import { User } from 'src/shared/user.interface';
@@ -50,7 +45,6 @@ export class UsersComponent extends Destroyable implements OnInit {
     'Ups coś poszło nie tak, proszę spróbować ponownie 💥💥💥';
   public isError: boolean = false;
   public users: any[] = [];
-  public filteredUsers: any[] = [];
 
   public displayedColumns: string[] = [
     'name',
@@ -74,6 +68,10 @@ export class UsersComponent extends Destroyable implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.handleUserHobbies();
+  }
+
+  private handleUserHobbies(): void {
     const users$: Observable<User[]> = this.usersService.fetchUsers();
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
@@ -85,9 +83,8 @@ export class UsersComponent extends Destroyable implements OnInit {
           return EMPTY;
         })
       )
-      .subscribe(
-        ([users, hobbies]) =>
-          this.handleUserWithHobbiesSubscription(users, hobbies)
+      .subscribe(([users, hobbies]) =>
+        this.handleUserWithHobbiesSubscription(users, hobbies)
       );
   }
 
@@ -167,68 +164,44 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public filtersApplied(searchedUser: SearchedUser): void {
     const filteredUsers: User[] = [];
-
-    this.dataSourceWithAllData.data.forEach((singleUser: User) => {
-
-      if ((searchedUser.firstName && singleUser.name.includes(searchedUser.firstName) || searchedUser.firstName === '')
-        &&
-        (searchedUser.lastName && singleUser.lastName.includes(searchedUser.lastName) || searchedUser.lastName === '')
-        &&
-        (searchedUser.dateOfBirth && singleUser.dateOfBirth.includes(searchedUser.dateOfBirth) || searchedUser.dateOfBirth === '')
-        &&
-        (searchedUser.email && singleUser.email.includes(searchedUser.email) || searchedUser.email === '')
-        &&
-        (searchedUser.address && singleUser.address.includes(searchedUser.address) || searchedUser.address === '')
-        &&
-        (searchedUser.hobbies && singleUser.hobbyNames.includes(searchedUser.hobbies) || searchedUser.hobbies === '')
-        ){
-        console.log('Wyszukanie co jest prawda', searchedUser, singleUser);
-        console.log('dodaje bo name', singleUser);
-        console.log('dodaje do searchUser', searchedUser);
-        console.log('Prawda', (singleUser.address.includes(searchedUser.address)));
+    console.log('przed', searchedUser);
+    this.dataSourceWithAllData.filteredData.forEach((singleUser: User) => {
+      if (
+        ((searchedUser.firstName &&
+          singleUser.name.includes(searchedUser.firstName)) ||
+          searchedUser.firstName === '') &&
+        ((searchedUser.lastName &&
+          singleUser.lastName.includes(searchedUser.lastName)) ||
+          searchedUser.lastName === '') &&
+        ((searchedUser.dateOfBirth &&
+          singleUser.dateOfBirth.includes(searchedUser.dateOfBirth)) ||
+          searchedUser.dateOfBirth === '') &&
+        ((searchedUser.email &&
+          singleUser.email.includes(searchedUser.email)) ||
+          searchedUser.email === '') &&
+        ((searchedUser.address &&
+          singleUser.address.includes(searchedUser.address)) ||
+          searchedUser.address === '') &&
+        ((searchedUser.hobbies &&
+          singleUser.hobbyNames.includes(searchedUser.hobbies)) ||
+          searchedUser.hobbies === '')
+      ) {
+        // console.log('Wyszukanie co jest prawda', searchedUser, singleUser);
+        // console.log('dodaje bo name', singleUser);
+        // console.log('dodaje do searchUser', searchedUser);
+        // console.log('Prawda', (singleUser.address.includes(searchedUser.address)));
         filteredUsers.push(singleUser);
         return;
       }
-
-      // if (searchedUser.lastName && singleUser.lastName.includes(searchedUser.lastName)) {
-      //   console.log('dodaje bo nazwisko', singleUser.lastName, searchedUser.lastName);
-      //   filteredUsers.push(singleUser);
-      //   return;
-      // }
-
-      // if (searchedUser.dateOfBirth && singleUser.dateOfBirth.includes(searchedUser.dateOfBirth)) {
-      //   console.log('dodaje bo data', singleUser.dateOfBirth, searchedUser.dateOfBirth);
-      //   filteredUsers.push(singleUser);
-      //   return;
-      // }
-
-      // if (searchedUser.hobbies && singleUser.hobbyNames.includes(searchedUser.hobbies)) {
-      //   console.log('dodaje bo hobbies', singleUser.hobbyNames, searchedUser.hobbies);
-      //   filteredUsers.push(singleUser);
-      //   return;
-      // }
-
-      // if (searchedUser.email && singleUser.email.includes(searchedUser.email)) {
-      //   console.log('dodaje bo email', singleUser.email, searchedUser.email);
-      //   filteredUsers.push(singleUser);
-      //   return;
-      // }
-
-      // if (searchedUser.address && singleUser.address.includes(searchedUser.address)) {
-      //   console.log('dodaje bo address', singleUser.address, searchedUser.address);
-      //   filteredUsers.push(singleUser);
-      //   return;
-      // }
     });
-    console.log('Filtrowany', filteredUsers);
+    // console.log('Filtrowany', filteredUsers);
     this.dataSource = new MatTableDataSource<User>(filteredUsers);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   public filterReset(): void {
-    this.dataSource = this.dataSourceWithAllData;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.handleUserHobbies();
+    this.dataSourceWithAllData;
   }
 }

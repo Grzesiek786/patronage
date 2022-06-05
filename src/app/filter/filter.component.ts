@@ -38,6 +38,7 @@ export class FilterComponent implements OnInit {
 
   public clear(): void {
     this.form.reset();
+    this.buildForm();
     this.filterReset.emit();
   }
 
@@ -48,7 +49,7 @@ export class FilterComponent implements OnInit {
       address: this.form.get('address')?.value,
       email: this.form.get('email')?.value,
       hobbies: this.form.get('hobbies')?.value,
-      dateOfBirth: this.form.get('dateOfBirth')?.value
+      dateOfBirth: this.form.get('dateOfBirth')?.value,
     };
   }
 }
