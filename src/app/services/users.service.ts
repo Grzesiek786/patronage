@@ -7,8 +7,9 @@ import { HttpService } from '../shared/http.service';
   providedIn: 'root',
 })
 export class UsersService {
-
   constructor(private httpService: HttpService) {}
+
+  private users: Observable<User[]>;
 
   public fetchUsers(): Observable<User[]> {
     return this.httpService.get<User[]>('users');
@@ -24,5 +25,9 @@ export class UsersService {
 
   public updateUser(user: User): Observable<User> {
     return this.httpService.put<User>(user, 'users', user.id);
+  }
+
+  public getByName(name: string) {
+    return this.users.forEach((proj) => (proj));
   }
 }

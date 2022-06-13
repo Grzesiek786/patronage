@@ -1,19 +1,12 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Hobby } from 'src/shared/hobby.interface';
 import { User } from 'src/shared/user.interface';
 import { HobbiesService } from '../services/hobbies.service';
 import { UsersService } from '../services/users.service';
 import { Destroyable } from '../shared/destroyable';
-import { map, takeUntil } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators';
+import { combineLatest, EMPTY, Observable } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import {
   animate,
@@ -23,6 +16,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { MatSort, Sort } from '@angular/material/sort';
+import { SearchedUser } from 'src/shared/searched-user.interface';
 
 @Component({
   selector: 'app-users',
@@ -51,7 +45,6 @@ export class UsersComponent extends Destroyable implements OnInit {
     'Ups coś poszło nie tak, proszę spróbować ponownie 💥💥💥';
   public isError: boolean = false;
   public users: any[] = [];
-  public filteredUsers: any[] = [];
 
   public displayedColumns: string[] = [
     'name',
@@ -65,6 +58,7 @@ export class UsersComponent extends Destroyable implements OnInit {
     'action',
   ];
   public dataSource: MatTableDataSource<User>;
+  public dataSourceWithAllData: MatTableDataSource<User>;
 
   constructor(
     private usersService: UsersService,
@@ -73,20 +67,24 @@ export class UsersComponent extends Destroyable implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
+    this.handleUserHobbies();
+  }
+
+  private handleUserHobbies(): void {
     const users$: Observable<User[]> = this.usersService.fetchUsers();
     const hobbies$: Observable<Hobby[]> = this.hobbiesService.fetchHobbies();
 
     combineLatest([users$, hobbies$])
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        ([users, hobbies]) => {
-          this.handleUserWithHobbiesSubscription(users, hobbies);
-        },
-        (error) => {
+      .pipe(
+        takeUntil(this.destroyed$),
+        catchError(() => {
           this.isError = !this.isError;
-          this.messageError;
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(([users, hobbies]) =>
+        this.handleUserWithHobbiesSubscription(users, hobbies)
       );
   }
 
@@ -107,6 +105,7 @@ export class UsersComponent extends Destroyable implements OnInit {
       });
     });
     this.dataSource = new MatTableDataSource<User>(users);
+    this.dataSourceWithAllData = new MatTableDataSource<User>(users);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -163,8 +162,31 @@ export class UsersComponent extends Destroyable implements OnInit {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
-  public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  public filtersApplied(searchedUser: SearchedUser): void {
+    const filteredUsers: User[] = [];
+    this.dataSourceWithAllData.filteredData.forEach((singleUser: User) => {
+      if (
+        this.checkUserField(searchedUser.firstName, singleUser.name) &&
+        this.checkUserField(searchedUser.lastName, singleUser.lastName) &&
+        this.checkUserField(searchedUser.dateOfBirth, singleUser.dateOfBirth) &&
+        this.checkUserField(searchedUser.email, singleUser.email) &&
+        this.checkUserField(searchedUser.address, singleUser.address) &&
+        this.checkUserField(searchedUser.hobbies, singleUser.hobbyNames)
+      ) {
+        filteredUsers.push(singleUser);
+        return;
+      }
+    });
+    this.dataSource = new MatTableDataSource<User>(filteredUsers);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  public filterReset(): void {
+    this.handleUserHobbies();
+  }
+
+  private checkUserField(searchedUserProp: string, singleUserProp: any) {
+    return (searchedUserProp && singleUserProp.includes(searchedUserProp) || searchedUserProp === '');
   }
 }

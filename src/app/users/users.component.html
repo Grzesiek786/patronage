@@ -1,15 +1,6 @@
-<app-filter (applyFilter)="applyFilter($event)"></app-filter>
-<mat-form-field appearance="standard">
-  <mat-label>Filter</mat-label>
-  <input
-    matInput
-    (keyup)="applyFilter($event)"
-    placeholder="Search columns"
-    #input
-  />
-</mat-form-field>
+<app-filter (filtersApplied)="filtersApplied($event)" (filterReset)="filterReset()"></app-filter>
 <div
-  class="mat-elevation-z8 data-table container"
+  class="mat-elevation-z8 data-table"
   matSort
   (matSortChange)="sortData($event)"
 >
