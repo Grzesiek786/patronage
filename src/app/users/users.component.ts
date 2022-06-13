@@ -164,37 +164,19 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public filtersApplied(searchedUser: SearchedUser): void {
     const filteredUsers: User[] = [];
-    console.log('przed', searchedUser);
     this.dataSourceWithAllData.filteredData.forEach((singleUser: User) => {
       if (
-        ((searchedUser.firstName &&
-          singleUser.name.includes(searchedUser.firstName)) ||
-          searchedUser.firstName === '') &&
-        ((searchedUser.lastName &&
-          singleUser.lastName.includes(searchedUser.lastName)) ||
-          searchedUser.lastName === '') &&
-        ((searchedUser.dateOfBirth &&
-          singleUser.dateOfBirth.includes(searchedUser.dateOfBirth)) ||
-          searchedUser.dateOfBirth === '') &&
-        ((searchedUser.email &&
-          singleUser.email.includes(searchedUser.email)) ||
-          searchedUser.email === '') &&
-        ((searchedUser.address &&
-          singleUser.address.includes(searchedUser.address)) ||
-          searchedUser.address === '') &&
-        ((searchedUser.hobbies &&
-          singleUser.hobbyNames.includes(searchedUser.hobbies)) ||
-          searchedUser.hobbies === '')
+        this.checkUserField(searchedUser.firstName, singleUser.name) &&
+        this.checkUserField(searchedUser.lastName, singleUser.lastName) &&
+        this.checkUserField(searchedUser.dateOfBirth, singleUser.dateOfBirth) &&
+        this.checkUserField(searchedUser.email, singleUser.email) &&
+        this.checkUserField(searchedUser.address, singleUser.address) &&
+        this.checkUserField(searchedUser.hobbies, singleUser.hobbyNames)
       ) {
-        // console.log('Wyszukanie co jest prawda', searchedUser, singleUser);
-        // console.log('dodaje bo name', singleUser);
-        // console.log('dodaje do searchUser', searchedUser);
-        // console.log('Prawda', (singleUser.address.includes(searchedUser.address)));
         filteredUsers.push(singleUser);
         return;
       }
     });
-    // console.log('Filtrowany', filteredUsers);
     this.dataSource = new MatTableDataSource<User>(filteredUsers);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -202,6 +184,9 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public filterReset(): void {
     this.handleUserHobbies();
-    this.dataSourceWithAllData;
+  }
+
+  private checkUserField(searchedUserProp: string, singleUserProp: any) {
+    return (searchedUserProp && singleUserProp.includes(searchedUserProp) || searchedUserProp === '');
   }
 }
