@@ -187,6 +187,9 @@ export class UsersComponent extends Destroyable implements OnInit {
   }
 
   private checkUserField(searchedUserProp: string, singleUserProp: any) {
-    return (searchedUserProp && singleUserProp.includes(searchedUserProp) || searchedUserProp === '');
+    return (
+      (searchedUserProp && singleUserProp.includes(searchedUserProp)) ||
+      searchedUserProp === ''
+    );
   }
 }

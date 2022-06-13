@@ -24,9 +24,10 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { ErrorComponent } from './error/error.component';
 import { FilterComponent } from './filter/filter.component';
 import { FilterPipe } from './shared/filter.pipe';
+import { UserEditComponent } from './users/user-edit/user-edit.component';
 
 @NgModule({
-  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent, FilterComponent, FilterPipe ],
+  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent, FilterComponent, FilterPipe, UserEditComponent ],
   imports: [
     BrowserModule,
     AppRoutingModule,
