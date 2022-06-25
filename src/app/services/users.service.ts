@@ -15,6 +15,11 @@ export class UsersService {
     return this.httpService.get<User[]>('users');
   }
 
+  public fetchUser(id: string): Observable<User> {
+    const url = `${this.users}/${id}`
+    return this.httpService.get<User>(url)
+  }
+
   public deleteUser(user: User): Observable<User> {
     return this.httpService.delete<User>(user.id, 'users');
   }
@@ -28,6 +33,6 @@ export class UsersService {
   }
 
   public getByName(name: string) {
-    return this.users.forEach((proj) => (proj));
+    return this.users.forEach((proj) => proj);
   }
 }

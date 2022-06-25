@@ -17,6 +17,7 @@ import {
 } from '@angular/animations';
 import { MatSort, Sort } from '@angular/material/sort';
 import { SearchedUser } from 'src/shared/searched-user.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -62,7 +63,9 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   constructor(
     private usersService: UsersService,
-    private hobbiesService: HobbiesService
+    private hobbiesService: HobbiesService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     super();
   }
@@ -127,7 +130,10 @@ export class UsersComponent extends Destroyable implements OnInit {
   }
 
   public editUser(user: User): void {
-    console.log(user);
+    this.router.navigate(['../', 'editUser', user.id], {relativeTo: this.route})
+    console.log(user.id);
+    const test = this.usersService.fetchUser(user.id);
+    console.log('id: ', test);
   }
 
   public sortData(sort: Sort) {
