@@ -97,19 +97,21 @@
             </div>
           </div>
           <div class="col-4">
-            <div class="form-group">
-              <label for="hobbies">Favorite Hobbies</label>
-              <input
-                type="checkbox"
-                id="hobbies"
-                class="form-contol"
-                name="hobby"
-              />
+            <div class="form-group" *ngFor="let hobby of hobbies">
+              <label for="hobbies">
+                <input
+                  type="checkbox"
+                  id="hobbies"
+                  formControlName="hobbiess"
+                  class="form-contol"
+                  name="hobby"
+                />
+              </label>
             </div>
           </div>
         </div>
         <button type="submit" class="btn btn-success">Save</button>
-        <button type="submit" class="btn btn-success">Cancel</button>
+        <button type="button" class="btn btn-success">Cancel</button>
       </form>
     </div>
   </div>

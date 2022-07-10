@@ -55,6 +55,7 @@ export class EditUserComponent implements OnInit {
     let phone = '';
     let address = '';
     let dateOfBirth = '';
+    let hobbies = ''
 
     if (this.editForm) {
       const edit = this.userService.fetchUser(this.id);
@@ -70,6 +71,7 @@ export class EditUserComponent implements OnInit {
       phone: new FormControl(phone),
       address: new FormControl(address),
       dateOfBirth: new FormControl(dateOfBirth),
+      hobbies: new FormControl([hobbies])
     });
   }
 }
