@@ -21,57 +21,62 @@ export class EditUserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.route.params.subscribe((params: Params) => {
-    //   this.id = params['id'];
-    //   this.editMode = params['id'] != null;
-    //   this.userService.fetchUser(this.id).subscribe(() => {
-    //     console.log("fetch");
-    //   })
-    //   this.initForm();
-    //   console.log(this.id, this.editMode);
-    // });
-    this.getUser();
-    this.initForm();
+    this.route.params.subscribe((params: Params) => {
+      this.id = params['id'];
+      this.editMode = params['id'] != null;
+      this.userService.fetchUser(this.id).subscribe(() => {
+        this.initForm();
+      })
+    });
+    // this.getUser();
   }
 
-  getUser(): void {
+  private getUser(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.userService.fetchUser(id).subscribe((user: User) => {
-      this.user = user;
-      console.log('user', this.user);
+      this.initForm();
     });
   }
 
-  onSubmit() {
-    console.log(this.editForm);
+  public onSubmit() {
+    console.log('edit', this.editForm);
   }
 
   private initForm(): void {
-    let firstName = '';
-    let lastName = '';
-    let email = '';
-    let age = '';
-    let sex = '';
-    let phone = '';
-    let address = '';
-    let dateOfBirth = '';
-    let hobbies = ''
+    let userFirstName = '';
+    let userLastName = '';
+    let userEmail = '';
+    let userAge = 0;
+    let userSex = '';
+    let userPhone = '';
+    let userAddress = '';
+    let userDateOfBirth = '';
+    let userHobbies = '';
 
-    if (this.editForm) {
+    if (this.editMode) {
       const edit = this.userService.fetchUser(this.id);
-      console.log(edit);
+      edit.subscribe((user: User) => {
+        userFirstName = user.name;
+        userLastName = user.lastName;
+        userEmail = user.email;
+        userAge = user.age;
+        userSex = user.gender;
+        userPhone = user.phoneNumber;
+        userAddress = user.address;
+        userDateOfBirth = user.dateOfBirth;
+      });
     }
 
     this.editForm = new FormGroup({
-      firstName: new FormControl(firstName),
-      lastName: new FormControl(lastName),
-      email: new FormControl(email),
-      age: new FormControl(age),
-      sex: new FormControl(sex),
-      phone: new FormControl(phone),
-      address: new FormControl(address),
-      dateOfBirth: new FormControl(dateOfBirth),
-      hobbies: new FormControl([hobbies])
+      'firstName': new FormControl(userFirstName),
+      'lastName': new FormControl(userLastName),
+      'email': new FormControl(userEmail),
+      'age': new FormControl(userAge),
+      'sex': new FormControl(userSex),
+      'phone': new FormControl(userPhone),
+      'address': new FormControl(userAddress),
+      'dateOfBirth': new FormControl(userDateOfBirth),
+      // 'hobbies': new FormControl([userHobbies]),
     });
   }
 }

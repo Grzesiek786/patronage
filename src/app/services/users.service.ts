@@ -16,8 +16,8 @@ export class UsersService {
   }
 
   public fetchUser(id: string): Observable<User> {
-    const url = `${this.users}/${id}`
-    return this.httpService.get<User>(url)
+    const url = `users/${id}`
+    return this.httpService.get<User>(url);
   }
 
   public deleteUser(user: User): Observable<User> {
