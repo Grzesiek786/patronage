@@ -21,23 +21,26 @@ export class EditUserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.editMode = params['id'] != null;
-      this.initForm();
-      this.userService.fetchUser(this.id).subscribe(() => {
-        this.initForm();
-      });
-    });
-    // this.getUser();
+    // this.route.params.subscribe((params: Params) => {
+    //   this.id = params['id'];
+    //   this.editMode = params['id'] != null;
+    //   this.initForm();
+    //   this.userService.fetchUser(this.id).subscribe(() => {
+    //     console.log(this.id);
+    //     this.initForm();
+    //   });
+    // });
+    this.initForm();
+    this.getUser();
   }
 
-  // private getUser(): void {
-  //   const id = this.route.snapshot.paramMap.get('id')!;
-  //   this.userService.fetchUser(id).subscribe((user: User) => {
-  //     this.initForm();
-  //   });
-  // }
+  private getUser(): void {
+    const id = this.route.snapshot.paramMap.get('id')!;
+    this.userService.fetchUser(id).subscribe((user: User) => {
+      console.log("id", user);
+      this.initForm();
+    });
+  }
 
   public onSubmit() {
     if (this.editMode) {
@@ -57,8 +60,8 @@ export class EditUserComponent implements OnInit {
     // let userHobbies = '';
 
     if (this.editMode) {
-      const edit = this.userService.fetchUser(this.id);
-      edit.subscribe((user: User) => {
+      this.userService.fetchUser(this.id)
+        .subscribe((user: User) => {
         firstName = user.name;
         lastName = user.lastName;
         email = user.email;
