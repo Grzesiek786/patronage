@@ -26,20 +26,23 @@ export class EditUserComponent implements OnInit {
       this.editMode = params['id'] != null;
       this.userService.fetchUser(this.id).subscribe(() => {
         this.initForm();
-      })
+        console.log(params);
+      });
     });
     // this.getUser();
   }
 
-  private getUser(): void {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    this.userService.fetchUser(id).subscribe((user: User) => {
-      this.initForm();
-    });
-  }
+  // private getUser(): void {
+  //   const id = this.route.snapshot.paramMap.get('id')!;
+  //   this.userService.fetchUser(id).subscribe((user: User) => {
+  //     this.initForm();
+  //   });
+  // }
 
   public onSubmit() {
-    console.log('edit', this.editForm);
+    if (this.editMode) {
+      console.log('edit', this.editForm);
+    }
   }
 
   private initForm(): void {
@@ -51,7 +54,7 @@ export class EditUserComponent implements OnInit {
     let userPhone = '';
     let userAddress = '';
     let userDateOfBirth = '';
-    let userHobbies = '';
+    // let userHobbies = '';
 
     if (this.editMode) {
       const edit = this.userService.fetchUser(this.id);
@@ -68,14 +71,14 @@ export class EditUserComponent implements OnInit {
     }
 
     this.editForm = new FormGroup({
-      'firstName': new FormControl(userFirstName),
-      'lastName': new FormControl(userLastName),
-      'email': new FormControl(userEmail),
-      'age': new FormControl(userAge),
-      'sex': new FormControl(userSex),
-      'phone': new FormControl(userPhone),
-      'address': new FormControl(userAddress),
-      'dateOfBirth': new FormControl(userDateOfBirth),
+      firstName: new FormControl(userFirstName),
+      lastName: new FormControl(userLastName),
+      email: new FormControl(userEmail),
+      age: new FormControl(userAge),
+      sex: new FormControl(userSex),
+      phone: new FormControl(userPhone),
+      address: new FormControl(userAddress),
+      dateOfBirth: new FormControl(userDateOfBirth),
       // 'hobbies': new FormControl([userHobbies]),
     });
   }
