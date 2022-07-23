@@ -131,9 +131,6 @@ export class UsersComponent extends Destroyable implements OnInit {
 
   public editUser(user: User): void {
     this.router.navigate(['../', 'editUser', user.id], {relativeTo: this.route})
-    console.log(user.id);
-    const test = this.usersService.fetchUser(user.id);
-    console.log('id: ', test);
   }
 
   public sortData(sort: Sort) {

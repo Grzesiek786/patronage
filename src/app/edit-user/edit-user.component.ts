@@ -24,9 +24,9 @@ export class EditUserComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
       this.editMode = params['id'] != null;
+      this.initForm();
       this.userService.fetchUser(this.id).subscribe(() => {
         this.initForm();
-        console.log(params);
       });
     });
     // this.getUser();
@@ -46,39 +46,39 @@ export class EditUserComponent implements OnInit {
   }
 
   private initForm(): void {
-    let userFirstName = '';
-    let userLastName = '';
-    let userEmail = '';
-    let userAge = 0;
-    let userSex = '';
-    let userPhone = '';
-    let userAddress = '';
-    let userDateOfBirth = '';
+    let firstName = '';
+    let lastName = '';
+    let email = '';
+    let age = 0;
+    let sex = '';
+    let phone = '';
+    let address = '';
+    let dateOfBirth = '';
     // let userHobbies = '';
 
     if (this.editMode) {
       const edit = this.userService.fetchUser(this.id);
       edit.subscribe((user: User) => {
-        userFirstName = user.name;
-        userLastName = user.lastName;
-        userEmail = user.email;
-        userAge = user.age;
-        userSex = user.gender;
-        userPhone = user.phoneNumber;
-        userAddress = user.address;
-        userDateOfBirth = user.dateOfBirth;
+        firstName = user.name;
+        lastName = user.lastName;
+        email = user.email;
+        age = user.age;
+        sex = user.gender;
+        phone = user.phoneNumber;
+        address = user.address;
+        dateOfBirth = user.dateOfBirth;
       });
     }
 
     this.editForm = new FormGroup({
-      firstName: new FormControl(userFirstName),
-      lastName: new FormControl(userLastName),
-      email: new FormControl(userEmail),
-      age: new FormControl(userAge),
-      sex: new FormControl(userSex),
-      phone: new FormControl(userPhone),
-      address: new FormControl(userAddress),
-      dateOfBirth: new FormControl(userDateOfBirth),
+      firstName: new FormControl(firstName),
+      lastName: new FormControl(lastName),
+      email: new FormControl(email),
+      age: new FormControl(age),
+      sex: new FormControl(sex),
+      phone: new FormControl(phone),
+      address: new FormControl(address),
+      dateOfBirth: new FormControl(dateOfBirth),
       // 'hobbies': new FormControl([userHobbies]),
     });
   }
