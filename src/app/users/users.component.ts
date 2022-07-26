@@ -86,8 +86,9 @@ export class UsersComponent extends Destroyable implements OnInit {
           return EMPTY;
         })
       )
-      .subscribe(([users, hobbies]) =>
-        this.handleUserWithHobbiesSubscription(users, hobbies)
+      .subscribe(([users, hobbies]) => {
+          return this.handleUserWithHobbiesSubscription(users, hobbies)
+        }
       );
   }
 

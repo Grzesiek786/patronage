@@ -5,11 +5,11 @@
         <div class="row">
           <div class="col-4">
             <div class="form-group">
-              <label for="firstName">First Name</label>
+              <label for="name">First Name</label>
               <input
                 type="text"
-                id="firstName"
-                formControlName="firstName"
+                id="name"
+                formControlName="name"
                 class="form-contol"
               />
             </div>
@@ -52,22 +52,22 @@
           </div>
           <div class="col-4">
             <div class="form-group">
-              <label for="sex">Sex</label>
+              <label for="gender">Sex</label>
               <input
                 type="text"
-                id="sex"
-                formControlName="sex"
+                id="gender"
+                formControlName="gender"
                 class="form-contol"
               />
             </div>
           </div>
           <div class="col-4">
             <div class="form-group">
-              <label for="phone">phone</label>
+              <label for="phoneNumber">phone</label>
               <input
                 type="text"
-                id="phone"
-                formControlName="phone"
+                id="phoneNumber"
+                formControlName="phoneNumber"
                 class="form-contol"
               />
             </div>
@@ -97,8 +97,17 @@
             </div>
           </div>
           <div class="col-4">
-            <div class="form-group" *ngFor="let hobby of hobbies">
-              <label for="hobbies">
+            <div class="form-group">
+              <label for="hobby">Favourite Hobbies</label>
+
+              <div *ngFor="let hobby of hobbies">
+                <input type="checkbox" id="hobby" formControlName="hobbies">
+                <label>{{ hobby }}</label>
+              </div>
+                <!-- <select name="hobbies" id="hobbies" >
+                <option value="hobby.name">{{ hobby.name }}</option>
+              </select> -->
+              <!-- <label for="hobbies">
                 <input
                   type="checkbox"
                   id="hobbies"
@@ -106,7 +115,7 @@
                   class="form-contol"
                   name="hobby"
                 />
-              </label>
+              </label> -->
             </div>
           </div>
         </div>
@@ -114,8 +123,12 @@
           type="submit"
           [disabled]="!editForm.valid"
           class="btn btn-success"
-        >Save</button>
-        <button type="button" (click)="onCancel()" class="btn btn-success">Cancel</button>
+        >
+          Save
+        </button>
+        <button type="button" (click)="onCancel()" class="btn btn-success">
+          Cancel
+        </button>
       </form>
     </div>
   </div>
