@@ -20,11 +20,11 @@ const httpOptions = {
 export class HttpService {
   private apiUrl: string = environment.apiUrl;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   public get<T>(url: string): Observable<T> {
     const fullUrl: string = this.prepareFullUrl(url);
-    return this.httpClient.get<T>(fullUrl);
+    return this.http.get<T>(fullUrl);
   }
 
   private prepareFullUrl(url: string): string {
@@ -33,15 +33,15 @@ export class HttpService {
 
   public delete<T>(id: string, url: string): Observable<T> {
     const deleteUrl: string = `${this.prepareFullUrl(url)}/${id}`;
-    return this.httpClient.delete<T>(deleteUrl);
+    return this.http.delete<T>(deleteUrl);
   }
 
   public post<T>(t: T, url: string): Observable<T> {
-    return this.httpClient.post<T>(this.prepareFullUrl(url), t, httpOptions);
+    return this.http.post<T>(this.prepareFullUrl(url), t, httpOptions);
   }
 
   public put<T>(t: T, url: string, id: string): Observable<T> {
     const putUrl: string = `${this.prepareFullUrl(url)}/${id}`;
-    return this.httpClient.put<T>(putUrl, t, httpOptions);
+    return this.http.put<T>(putUrl, t, httpOptions);
   }
 }

@@ -16,7 +16,7 @@ export class UsersService {
   }
 
   public fetchUser(id: string): Observable<User> {
-    const url = `users/${id}`
+    const url = `users/${id}`;
     return this.httpService.get<User>(url);
   }
 
@@ -28,8 +28,8 @@ export class UsersService {
     return this.httpService.post<User>(user, 'users');
   }
 
-  public updateUser(user: User): Observable<User> {
-    return this.httpService.put<User>(user, 'users', user.id);
+  public updateUser(user: User, id: string): Observable<User> {
+    return this.httpService.put<User>(user, 'users', id);
   }
 
   public getByName(name: string) {

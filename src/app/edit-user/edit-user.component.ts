@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { User } from 'src/shared/user.interface';
 import { UsersService } from '../services/users.service';
 
@@ -17,36 +17,53 @@ export class EditUserComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private userService: UsersService
+    private userService: UsersService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    // this.route.params.subscribe((params: Params) => {
-    //   this.id = params['id'];
-    //   this.editMode = params['id'] != null;
-    //   this.initForm();
-    //   this.userService.fetchUser(this.id).subscribe(() => {
-    //     console.log(this.id);
-    //     this.initForm();
-    //   });
-    // });
-    this.initForm();
-    this.getUser();
+    this.route.params.subscribe((params: Params) => {
+      this.id = params['id'];
+      this.editMode = params['id'] != null;
+      this.initForm();
+      this.userService.fetchUser(this.id).subscribe((user: User) => {
+            console.log("id", user);
+            this.editForm = new FormGroup({
+              "firstName": new FormControl(user.name),
+              "lastName": new FormControl(user.lastName),
+              "email": new FormControl(user.email),
+              "age": new FormControl(user.age),
+              "sex": new FormControl(user.gender),
+              "phone": new FormControl(user.phoneNumber),
+              "address": new FormControl(user.address),
+              "dateOfBirth": new FormControl(user.dateOfBirth),
+            });
+          });
+    });
+    // this.initForm();
+    // this.getUser();
   }
 
-  private getUser(): void {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    this.userService.fetchUser(id).subscribe((user: User) => {
-      console.log("id", user);
-      this.initForm();
-    });
-  }
+  // private getUser(): void {
+  //   const id = this.route.snapshot.paramMap.get('id')!;
+  //   this.userService.fetchUser(id).subscribe((user: User) => {
+  //     console.log("id", user);
+  //     // this.initForm();
+  //   });
+  // }
 
   public onSubmit() {
     if (this.editMode) {
-      console.log('edit', this.editForm);
+      this.userService.updateUser(this.editForm.value, this.id);
+    } else {
+      this.userService.addUser(this.editForm.value);
     }
-  }
+      this.onCancel();
+    }
+
+    public onCancel() {
+      this.router.navigate(['../../'], {relativeTo: this.route});
+    }
 
   private initForm(): void {
     let firstName = '';
@@ -59,19 +76,18 @@ export class EditUserComponent implements OnInit {
     let dateOfBirth = '';
     // let userHobbies = '';
 
-    if (this.editMode) {
-      this.userService.fetchUser(this.id)
-        .subscribe((user: User) => {
-        firstName = user.name;
-        lastName = user.lastName;
-        email = user.email;
-        age = user.age;
-        sex = user.gender;
-        phone = user.phoneNumber;
-        address = user.address;
-        dateOfBirth = user.dateOfBirth;
-      });
-    }
+    // if (this.editMode) {
+    //   this.userService.fetchUser(this.id).subscribe((user: User) => {
+    //     firstName = user.name;
+    //     lastName = user.lastName;
+    //     email = user.email;
+    //     age = user.age;
+    //     sex = user.gender;
+    //     phone = user.phoneNumber;
+    //     address = user.address;
+    //     dateOfBirth = user.dateOfBirth;
+    //   });
+    // }
 
     this.editForm = new FormGroup({
       firstName: new FormControl(firstName),
@@ -84,5 +100,6 @@ export class EditUserComponent implements OnInit {
       dateOfBirth: new FormControl(dateOfBirth),
       // 'hobbies': new FormControl([userHobbies]),
     });
+
   }
 }
