@@ -28,7 +28,17 @@ import { UserEditComponent } from './users/user-edit/user-edit.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 
 @NgModule({
-  declarations: [AppComponent, UsersComponent, HeaderComponent, AddUserComponent, ErrorComponent, FilterComponent, FilterPipe, UserEditComponent, EditUserComponent ],
+  declarations: [
+    AppComponent,
+    UsersComponent,
+    HeaderComponent,
+    AddUserComponent,
+    ErrorComponent,
+    FilterComponent,
+    FilterPipe,
+    UserEditComponent,
+    EditUserComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
