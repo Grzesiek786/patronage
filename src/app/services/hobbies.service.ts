@@ -13,6 +13,11 @@ export class HobbiesService {
     return this.httpService.get<Hobby[]>('hobbies');
   }
 
+  public fetchHobby(id: string): Observable<Hobby> {
+    const url = `hobbies/${id}`;
+    return this.httpService.get<Hobby>(url);
+  }
+
   public addHobby(hobby: Hobby): Observable<Hobby> {
     return this.httpService.post<Hobby>(hobby, 'hobbies');
   }

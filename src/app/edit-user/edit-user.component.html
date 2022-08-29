@@ -101,10 +101,10 @@
               <label for="hobby">Favourite Hobbies</label>
 
               <div *ngFor="let hobby of hobbies">
-                <input type="checkbox" id="hobby" formControlName="hobbies">
+                <input type="checkbox" id="hobby" formControlName="hobbies" />
                 <label>{{ hobby }}</label>
               </div>
-                <!-- <select name="hobbies" id="hobbies" >
+              <!-- <select name="hobbies" id="hobbies" >
                 <option value="hobby.name">{{ hobby.name }}</option>
               </select> -->
               <!-- <label for="hobbies">
@@ -133,3 +133,5 @@
     </div>
   </div>
 </div>
+
+<pre>{{ editForm.value | json }}</pre>

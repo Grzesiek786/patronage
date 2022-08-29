@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Hobby } from 'src/shared/hobby.interface';
 import { User } from 'src/shared/user.interface';
@@ -19,36 +19,82 @@ export class EditUserComponent extends Destroyable implements OnInit {
   public editMode = false;
   public editForm: FormGroup;
   public user: User | undefined;
+  public users: User[] = [];
   public hobbies: string[] = [];
+  // public hobbies: Hobby[] = []
 
   constructor(
     private route: ActivatedRoute,
-    private userService: UsersService,
-    // private hobbiesService: HobbiesService,
+    private usersService: UsersService,
+    private hobbiesService: HobbiesService,
     private router: Router
   ) {
     super();
   }
+
+  // ngOnInit(): void {
+  //   this.route.params.subscribe((params: Params) => {
+  //     this.id = params['id'];
+  //     this.editMode = params['id'] != null;
+  //     const users$: Observable<User[]> = this.usersService.fetchUsers();
+  //     const hobbies$: Observable<Hobby> = this.hobbiesService.fetchHobby(this.id);
+  //     // combineLatest()
+  //     this.initForm();
+  //     hobbies$.subscribe((hobby: Hobby) => console.log(hobby.name));
+  //     this.usersService.fetchUser(this.id).subscribe((user: User) => {
+  //       // this.getHobbies();
+  //       // this.hobbies = user.hobbies;
+  //       this.users.forEach((user: User) => {
+  //         if (!user.hobbyNames) {
+  //           user.hobbyNames = [];
+  //         }
+
+  //         user.hobbies.forEach((hobbyName: string) => {
+  //           const foundHobby: Hobby = this.hobbies.find(
+  //             (searchedHobby: Hobby) => searchedHobby.id === hobbyName
+  //           );
+  //           user.hobbyNames.push(foundHobby.name);
+  //         });
+  //       });
+  //       // console.log(this.hobbies);
+  //       this.editForm = new FormGroup({
+  //         name: new FormControl(user.name),
+  //         lastName: new FormControl(user.lastName),
+  //         email: new FormControl(user.email),
+  //         age: new FormControl(user.age),
+  //         gender: new FormControl(user.gender),
+  //         phoneNumber: new FormControl(user.phoneNumber),
+  //         address: new FormControl(user.address),
+  //         dateOfBirth: new FormControl(user.dateOfBirth),
+  //         hobbies: new FormControl(this.hobbies),
+  //       });
+  //     });
+  //   });
+  // }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
       this.editMode = params['id'] != null;
       this.initForm();
-      this.userService.fetchUser(this.id).subscribe((user: User) => {
-        // this.getHobbies();
-        this.hobbies = user.hobbies;
+      this.usersService.fetchUser(this.id).subscribe((user: User) => {
+        console.log(user.hobbies);
+        user.hobbies.forEach((id: string) => {
+          const hobbies$: Observable<Hobby> =
+            this.hobbiesService.fetchHobby(id);
+          hobbies$.subscribe((hobby: Hobby) => this.hobbies.push(hobby.name));
+        });
         console.log(this.hobbies);
         this.editForm = new FormGroup({
-          "name": new FormControl(user.name),
-          "lastName": new FormControl(user.lastName),
-          "email": new FormControl(user.email),
-          "age": new FormControl(user.age),
-          "gender": new FormControl(user.gender),
-          "phoneNumber": new FormControl(user.phoneNumber),
-          "address": new FormControl(user.address),
-          "dateOfBirth": new FormControl(user.dateOfBirth),
-          "hobbies": new FormControl(this.hobbies)
+          name: new FormControl(user.name),
+          lastName: new FormControl(user.lastName),
+          email: new FormControl(user.email),
+          age: new FormControl(user.age),
+          gender: new FormControl(user.gender),
+          phoneNumber: new FormControl(user.phoneNumber),
+          address: new FormControl(user.address),
+          dateOfBirth: new FormControl(user.dateOfBirth),
+          hobbies: new FormControl(this.hobbies),
         });
       });
     });
@@ -74,13 +120,13 @@ export class EditUserComponent extends Destroyable implements OnInit {
 
   public onSubmit() {
     if (this.editMode) {
-      this.userService
+      this.usersService
         .updateUser(this.editForm.value, this.id)
         .subscribe(() => {
           console.log('wykonano');
         });
     } else {
-      this.userService.addUser(this.editForm.value);
+      this.usersService.addUser(this.editForm.value);
     }
     this.onCancel();
   }
@@ -101,15 +147,15 @@ export class EditUserComponent extends Destroyable implements OnInit {
     let userHobbies = '';
 
     this.editForm = new FormGroup({
-      "name": new FormControl(firstName),
-      "lastName": new FormControl(lastName),
-      "email": new FormControl(email),
-      "age": new FormControl(age),
-      "gender": new FormControl(sex),
-      "phoneNumber": new FormControl(phone),
-      "address": new FormControl(address),
-      "dateOfBirth": new FormControl(dateOfBirth),
-      "hobbies": new FormControl(userHobbies),
+      name: new FormControl(firstName),
+      lastName: new FormControl(lastName),
+      email: new FormControl(email),
+      age: new FormControl(age),
+      gender: new FormControl(sex),
+      phoneNumber: new FormControl(phone),
+      address: new FormControl(address),
+      dateOfBirth: new FormControl(dateOfBirth),
+      hobbies: new FormControl(userHobbies),
     });
   }
 }
