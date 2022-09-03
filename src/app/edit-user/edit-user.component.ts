@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +27,8 @@ export class EditUserComponent extends Destroyable implements OnInit {
     private route: ActivatedRoute,
     private usersService: UsersService,
     private hobbiesService: HobbiesService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder
   ) {
     super();
   }
@@ -78,13 +79,11 @@ export class EditUserComponent extends Destroyable implements OnInit {
       this.editMode = params['id'] != null;
       this.initForm();
       this.usersService.fetchUser(this.id).subscribe((user: User) => {
-        console.log(user.hobbies);
         user.hobbies.forEach((id: string) => {
           const hobbies$: Observable<Hobby> =
             this.hobbiesService.fetchHobby(id);
           hobbies$.subscribe((hobby: Hobby) => this.hobbies.push(hobby.name));
         });
-        console.log(this.hobbies);
         this.editForm = new FormGroup({
           name: new FormControl(user.name),
           lastName: new FormControl(user.lastName),
@@ -94,7 +93,8 @@ export class EditUserComponent extends Destroyable implements OnInit {
           phoneNumber: new FormControl(user.phoneNumber),
           address: new FormControl(user.address),
           dateOfBirth: new FormControl(user.dateOfBirth),
-          hobbies: new FormControl(this.hobbies),
+          hobbies: new FormArray([
+            new FormControl(this.hobbies)]),
         });
       });
     });
@@ -116,6 +116,10 @@ export class EditUserComponent extends Destroyable implements OnInit {
   //     console.log("id", user);
   //     // this.initForm();
   //   });
+  // }
+
+  // public get hobbiesControls(): FormControl[] {
+  //   const hobbiesFormArray: FormArray = this.editForm.get('hobbies').controls as FormArray
   // }
 
   public onSubmit() {
