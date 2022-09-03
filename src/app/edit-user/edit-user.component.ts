@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Hobby } from 'src/shared/hobby.interface';
 import { User } from 'src/shared/user.interface';
@@ -78,11 +78,17 @@ export class EditUserComponent extends Destroyable implements OnInit {
       this.id = params['id'];
       this.editMode = params['id'] != null;
       this.initForm();
-      this.usersService.fetchUser(this.id).subscribe((user: User) => {
+      this.usersService.fetchUser(this.id)
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((user: User) => {
         user.hobbies.forEach((id: string) => {
           const hobbies$: Observable<Hobby> =
             this.hobbiesService.fetchHobby(id);
-          hobbies$.subscribe((hobby: Hobby) => this.hobbies.push(hobby.name));
+            hobbies$.subscribe((hobby: Hobby) => {
+            this.hobbies.push(hobby.name)
+          });
         });
         this.editForm = new FormGroup({
           name: new FormControl(user.name),
@@ -93,8 +99,7 @@ export class EditUserComponent extends Destroyable implements OnInit {
           phoneNumber: new FormControl(user.phoneNumber),
           address: new FormControl(user.address),
           dateOfBirth: new FormControl(user.dateOfBirth),
-          hobbies: new FormArray([
-            new FormControl(this.hobbies)]),
+          hobbies: new FormControl(this.hobbies),
         });
       });
     });

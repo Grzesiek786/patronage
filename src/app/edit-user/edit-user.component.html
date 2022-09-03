@@ -100,11 +100,14 @@
             <div class="form-group">
               <label for="hobby">Favourite Hobbies</label>
 
-
-                <div *ngFor="let hobby of hobbies">
-                  <input type="checkbox" id="hobby" [formControlArray]="hobbies"/>
-                  <label>{{ hobby }}</label>
-                </div>
+              <div *ngFor="let hobby of hobbies">
+                <input
+                  type="checkbox"
+                  id="hobby"
+                  [formControlArray]="hobbies"
+                />
+                <label>{{ hobby }}</label>
+              </div>
               <!-- <select name="hobbies" id="hobbies" >
                 <option value="hobby.name">{{ hobby.name }}</option>
               </select> -->
